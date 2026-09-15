@@ -42,9 +42,17 @@ class AuthAwareClient implements ATProtoClientInterface
             return $this->decorated->sendRequest($request);
         }
 
-        $session = $this->getSession();
+        try {
+            $session = $this->getSession();
 
-        return $this->sendRequestWithSession($request, $session);
+            return $this->sendRequestWithSession($request, $session);
+        } catch (AuthException $e) {
+            if ($e->getError() !== 'AuthFactorTokenRequired') {
+                throw $e;
+            }
+
+            throw AuthFactorTokenRequiredException::fromAuthException($e);
+        }
     }
 
     private function getSession(): Session
@@ -56,20 +64,28 @@ class AuthAwareClient implements ATProtoClientInterface
         $session = $this->sessionStore->retrieve($this->authConfig);
 
         if ($session === null) {
-            $input = CreateSessionInput::new(
-                identifier: $this->authConfig->login(),
-                password: $this->authConfig->password(),
-                authFactorToken: $this->authConfig->authFactorToken(),
-                allowTakendown: $this->authConfig->allowTakendown(),
-            );
-
-            $session = $this->createSession()->procedure($input);
-            $session = new Session($session->accessJwt, $session->refreshJwt);
-
+            $session = $this->requestNewSession();
             $this->sessionStore->store($this->authConfig, $session);
         }
 
         return $session;
+    }
+
+    private function requestNewSession(): Session
+    {
+        \assert($this->authConfig->login() !== null);
+        \assert($this->authConfig->password() !== null);
+
+        $input = CreateSessionInput::new(
+            identifier: $this->authConfig->login(),
+            password: $this->authConfig->password(),
+            authFactorToken: $this->authConfig->authFactorToken() ?? '',
+            allowTakendown: $this->authConfig->allowTakendown(),
+        );
+
+        $session = $this->createSession()->procedure($input);
+
+        return new Session($session->accessJwt, $session->refreshJwt);
     }
 
     private function sendRequestWithSession(RequestInterface $request, Session $session): ResponseInterface

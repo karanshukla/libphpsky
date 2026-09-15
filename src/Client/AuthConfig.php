@@ -9,6 +9,7 @@ readonly class AuthConfig
     public function __construct(
         private ?string $login = null,
         private ?string $password = null,
+        private ?string $authFactorToken = null,
     ) {}
 
     public function login(): ?string
@@ -21,9 +22,9 @@ readonly class AuthConfig
         return $this->password;
     }
 
-    public function authFactorToken(): string
+    public function authFactorToken(): ?string
     {
-        return '';
+        return $this->authFactorToken;
     }
 
     public function allowTakendown(): bool

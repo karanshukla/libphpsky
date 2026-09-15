@@ -46,7 +46,10 @@ readonly class ErrorAwareClient implements ATProtoClientInterface
                 }
             }
 
-            if ($response->getStatusCode() === 401) {
+            if (
+                $response->getStatusCode() === 401
+                || $error === 'ExpiredToken'
+            ) {
                 throw new AuthException(
                     error: $error,
                     message: $message,
@@ -69,6 +72,7 @@ readonly class ErrorAwareClient implements ATProtoClientInterface
                     query: $request->getUri()->getQuery() ?: null
                 );
             }
+
             throw new ProcedureException(
                 error: $error,
                 message: $message,
