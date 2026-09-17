@@ -23,6 +23,9 @@ class Notification implements \Aazsamir\Libphpsky\ATProtoObject
     public string $reason;
     public ?string $reasonSubject;
     public mixed $record;
+
+    /** @var ?\Aazsamir\Libphpsky\Model\App\Bsky\Graph\Defs\StarterPackViewBasic The starter pack associated with this notification. Present when the notification is for a follow originating from a starter pack. */
+    public ?\Aazsamir\Libphpsky\Model\App\Bsky\Graph\Defs\StarterPackViewBasic $starterPack;
     public bool $isRead;
     public \DateTimeInterface $indexedAt;
 
@@ -61,6 +64,7 @@ class Notification implements \Aazsamir\Libphpsky\ATProtoObject
         \DateTimeInterface $indexedAt,
         ?\Aazsamir\Libphpsky\Model\App\Bsky\Actor\Defs\ProfileView $author = null,
         ?string $reasonSubject = null,
+        ?\Aazsamir\Libphpsky\Model\App\Bsky\Graph\Defs\StarterPackViewBasic $starterPack = null,
         ?array $labels = [],
     ): self {
         $instance = new self();
@@ -75,6 +79,9 @@ class Notification implements \Aazsamir\Libphpsky\ATProtoObject
         }
         if ($reasonSubject !== null) {
             $instance->reasonSubject = $reasonSubject;
+        }
+        if ($starterPack !== null) {
+            $instance->starterPack = $starterPack;
         }
         if ($labels !== null) {
             $instance->labels = $labels;

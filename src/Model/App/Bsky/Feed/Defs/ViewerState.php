@@ -24,6 +24,9 @@ class ViewerState implements \Aazsamir\Libphpsky\ATProtoObject
     public ?bool $embeddingDisabled;
     public ?bool $pinned;
 
+    /** @var ?\Aazsamir\Libphpsky\Model\App\Bsky\Feed\Defs\KnownLikers This property is present only in selected cases, as an optimization. */
+    public ?KnownLikers $knownLikers;
+
     public static function id(): string
     {
         return self::ID;
@@ -52,6 +55,7 @@ class ViewerState implements \Aazsamir\Libphpsky\ATProtoObject
         ?bool $replyDisabled = null,
         ?bool $embeddingDisabled = null,
         ?bool $pinned = null,
+        ?KnownLikers $knownLikers = null,
     ): self {
         $instance = new self();
         if ($repost !== null) {
@@ -74,6 +78,9 @@ class ViewerState implements \Aazsamir\Libphpsky\ATProtoObject
         }
         if ($pinned !== null) {
             $instance->pinned = $pinned;
+        }
+        if ($knownLikers !== null) {
+            $instance->knownLikers = $knownLikers;
         }
 
         return $instance;

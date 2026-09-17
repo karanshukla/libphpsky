@@ -27,6 +27,9 @@ class UpdateQueueInput implements \Aazsamir\Libphpsky\ATProtoObject
     /** @var ?string Optional description of the queue */
     public ?string $description;
 
+    /** @var ?array<string> Policy keys to recommend when actioning reports in this queue */
+    public ?array $recommendedPolicies = [];
+
     public static function id(): string
     {
         return self::ID;
@@ -47,11 +50,15 @@ class UpdateQueueInput implements \Aazsamir\Libphpsky\ATProtoObject
         return ['queueId'];
     }
 
+    /**
+     * @param array<string> $recommendedPolicies
+     */
     public static function new(
         int $queueId,
         ?string $name = null,
         ?bool $enabled = null,
         ?string $description = null,
+        ?array $recommendedPolicies = [],
     ): self {
         $instance = new self();
         $instance->queueId = $queueId;
@@ -63,6 +70,9 @@ class UpdateQueueInput implements \Aazsamir\Libphpsky\ATProtoObject
         }
         if ($description !== null) {
             $instance->description = $description;
+        }
+        if ($recommendedPolicies !== null) {
+            $instance->recommendedPolicies = $recommendedPolicies;
         }
 
         return $instance;

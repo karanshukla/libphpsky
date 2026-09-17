@@ -31,7 +31,7 @@ class QueryReports implements \Aazsamir\Libphpsky\Action
      * @param ?array<string> $reportTypes  Filter by report types (fully qualified string in the format of com.atproto.moderation.defs#reason<name>).
      * @param ?string $subject Filter by subject DID or AT-URI.
      * @param ?string $did Filter to reports where the subject is this DID or any record owned by this DID. Unlike `subject` (which scopes to a specific account or record), this returns all reports tied to the DID across both account-level and record-level subjects.
-     * @param ?string $subjectType If specified, reports of the given type (account or record) will be returned.
+     * @param ?string $subjectType If specified, reports of the given subject type will be returned.
      * @param ?array<string> $collections  If specified, reports where the subject belongs to the given collections will be returned. When subjectType is set to 'account', this will be ignored.
      * @param ?\DateTimeInterface $reportedAfter Retrieve reports created after a given timestamp
      * @param ?\DateTimeInterface $reportedBefore Retrieve reports created before a given timestamp
@@ -64,7 +64,7 @@ class QueryReports implements \Aazsamir\Libphpsky\Action
      * @param ?array<string> $reportTypes  Filter by report types (fully qualified string in the format of com.atproto.moderation.defs#reason<name>).
      * @param ?string $subject Filter by subject DID or AT-URI.
      * @param ?string $did Filter to reports where the subject is this DID or any record owned by this DID. Unlike `subject` (which scopes to a specific account or record), this returns all reports tied to the DID across both account-level and record-level subjects.
-     * @param ?string $subjectType If specified, reports of the given type (account or record) will be returned.
+     * @param ?string $subjectType If specified, reports of the given subject type will be returned.
      * @param ?array<string> $collections  If specified, reports where the subject belongs to the given collections will be returned. When subjectType is set to 'account', this will be ignored.
      * @param ?\DateTimeInterface $reportedAfter Retrieve reports created after a given timestamp
      * @param ?\DateTimeInterface $reportedBefore Retrieve reports created before a given timestamp

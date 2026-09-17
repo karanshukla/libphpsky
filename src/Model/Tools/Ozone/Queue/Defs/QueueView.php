@@ -21,17 +21,20 @@ class QueueView implements \Aazsamir\Libphpsky\ATProtoObject
     /** @var string Display name of the queue */
     public string $name;
 
-    /** @var array<string> Subject types this queue accepts. */
-    public array $subjectTypes = [];
+    /** @var ?array<string> Subject types this queue accepts. */
+    public ?array $subjectTypes = [];
 
     /** @var ?string Collection name for record subjects (e.g., 'app.bsky.feed.post') */
     public ?string $collection;
 
-    /** @var array<string> Report reason types this queue accepts (fully qualified NSIDs) */
-    public array $reportTypes = [];
+    /** @var ?array<string> Report reason types this queue accepts (fully qualified NSIDs) */
+    public ?array $reportTypes = [];
 
     /** @var ?string Optional description of the queue */
     public ?string $description;
+
+    /** @var ?array<string> Policy keys recommended when actioning reports in this queue */
+    public ?array $recommendedPolicies = [];
 
     /** @var string DID of moderator who created this queue */
     public string $createdBy;
@@ -64,41 +67,50 @@ class QueueView implements \Aazsamir\Libphpsky\ATProtoObject
 
     public static function required(): array
     {
-        return ['id', 'name', 'subjectTypes', 'reportTypes', 'createdBy', 'createdAt', 'updatedAt', 'enabled', 'stats'];
+        return ['id', 'name', 'createdBy', 'createdAt', 'updatedAt', 'enabled', 'stats'];
     }
 
     /**
      * @param array<string> $subjectTypes
      * @param array<string> $reportTypes
+     * @param array<string> $recommendedPolicies
      */
     public static function new(
         int $id,
         string $name,
-        array $subjectTypes,
-        array $reportTypes,
         string $createdBy,
         \DateTimeInterface $createdAt,
         \DateTimeInterface $updatedAt,
         bool $enabled,
+        ?array $subjectTypes = [],
         ?string $collection = null,
+        ?array $reportTypes = [],
         ?string $description = null,
+        ?array $recommendedPolicies = [],
         ?\DateTimeInterface $deletedAt = null,
         ?QueueStats $stats = null,
     ): self {
         $instance = new self();
         $instance->id = $id;
         $instance->name = $name;
-        $instance->subjectTypes = $subjectTypes;
-        $instance->reportTypes = $reportTypes;
         $instance->createdBy = $createdBy;
         $instance->createdAt = $createdAt;
         $instance->updatedAt = $updatedAt;
         $instance->enabled = $enabled;
+        if ($subjectTypes !== null) {
+            $instance->subjectTypes = $subjectTypes;
+        }
         if ($collection !== null) {
             $instance->collection = $collection;
         }
+        if ($reportTypes !== null) {
+            $instance->reportTypes = $reportTypes;
+        }
         if ($description !== null) {
             $instance->description = $description;
+        }
+        if ($recommendedPolicies !== null) {
+            $instance->recommendedPolicies = $recommendedPolicies;
         }
         if ($deletedAt !== null) {
             $instance->deletedAt = $deletedAt;

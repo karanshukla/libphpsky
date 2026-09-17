@@ -16,6 +16,9 @@ class ConfigRegion implements \Aazsamir\Libphpsky\ATProtoObject
     public const NAME = 'configRegion';
     public const ID = 'app.bsky.ageassurance.defs';
 
+    /** @var ?array<string> The platforms this configuration applies to. If omitted, the configuration applies to all platforms. */
+    public ?array $platforms = [];
+
     /** @var string The ISO 3166-1 alpha-2 country code this configuration applies to. */
     public string $countryCode;
 
@@ -53,12 +56,14 @@ class ConfigRegion implements \Aazsamir\Libphpsky\ATProtoObject
 
     /**
      * @param array<\Aazsamir\Libphpsky\Model\App\Bsky\Ageassurance\Defs\ConfigRegionRuleDefault|\Aazsamir\Libphpsky\Model\App\Bsky\Ageassurance\Defs\ConfigRegionRuleIfDeclaredOverAge|\Aazsamir\Libphpsky\Model\App\Bsky\Ageassurance\Defs\ConfigRegionRuleIfDeclaredUnderAge|\Aazsamir\Libphpsky\Model\App\Bsky\Ageassurance\Defs\ConfigRegionRuleIfAssuredOverAge|\Aazsamir\Libphpsky\Model\App\Bsky\Ageassurance\Defs\ConfigRegionRuleIfAssuredUnderAge|\Aazsamir\Libphpsky\Model\App\Bsky\Ageassurance\Defs\ConfigRegionRuleIfAccountNewerThan|\Aazsamir\Libphpsky\Model\App\Bsky\Ageassurance\Defs\ConfigRegionRuleIfAccountOlderThan> $rules
+     * @param array<string> $platforms
      * @param array<string> $additionalVerificationMethods
      */
     public static function new(
         string $countryCode,
         int $minAccessAge,
         array $rules,
+        ?array $platforms = [],
         ?string $regionCode = null,
         ?array $additionalVerificationMethods = [],
     ): self {
@@ -66,6 +71,9 @@ class ConfigRegion implements \Aazsamir\Libphpsky\ATProtoObject
         $instance->countryCode = $countryCode;
         $instance->minAccessAge = $minAccessAge;
         $instance->rules = $rules;
+        if ($platforms !== null) {
+            $instance->platforms = $platforms;
+        }
         if ($regionCode !== null) {
             $instance->regionCode = $regionCode;
         }

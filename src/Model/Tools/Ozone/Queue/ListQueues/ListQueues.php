@@ -27,7 +27,7 @@ class ListQueues implements \Aazsamir\Libphpsky\Action
 
     /**
      * @param ?bool $enabled Filter by enabled status. If not specified, returns all queues.
-     * @param ?string $subjectType Filter queues that handle this subject type ('account' or 'record').
+     * @param ?string $subjectType Filter queues that handle this subject type ('account', 'record', 'message', or 'conversation').
      * @param ?string $collection Filter queues by collection name (e.g. 'app.bsky.feed.post').
      * @param ?array<string> $reportTypes  Filter queues that handle any of these report reason types.
      */
@@ -44,7 +44,7 @@ class ListQueues implements \Aazsamir\Libphpsky\Action
 
     /**
      * @param ?bool $enabled Filter by enabled status. If not specified, returns all queues.
-     * @param ?string $subjectType Filter queues that handle this subject type ('account' or 'record').
+     * @param ?string $subjectType Filter queues that handle this subject type ('account', 'record', 'message', or 'conversation').
      * @param ?string $collection Filter queues by collection name (e.g. 'app.bsky.feed.post').
      * @param ?array<string> $reportTypes  Filter queues that handle any of these report reason types.
      * @return array<string, mixed>

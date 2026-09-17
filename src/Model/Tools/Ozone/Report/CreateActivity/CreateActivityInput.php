@@ -15,8 +15,11 @@ class CreateActivityInput implements \Aazsamir\Libphpsky\ATProtoObject
     public const NAME = 'input';
     public const ID = 'tools.ozone.report.createActivity';
 
-    /** @var int ID of the report to record activity on */
-    public int $reportId;
+    /** @var ?int ID of the report to record activity on. Exactly one of reportId or eventId must be provided. */
+    public ?int $reportId;
+
+    /** @var ?int ID of the report moderation event. Resolves to the report created from that event. Exactly one of reportId or eventId must be provided. */
+    public ?int $eventId;
 
     /** @var \Aazsamir\Libphpsky\Model\Tools\Ozone\Report\Defs\QueueActivity|\Aazsamir\Libphpsky\Model\Tools\Ozone\Report\Defs\AssignmentActivity|\Aazsamir\Libphpsky\Model\Tools\Ozone\Report\Defs\EscalationActivity|\Aazsamir\Libphpsky\Model\Tools\Ozone\Report\Defs\CloseActivity|\Aazsamir\Libphpsky\Model\Tools\Ozone\Report\Defs\ReopenActivity|\Aazsamir\Libphpsky\Model\Tools\Ozone\Report\Defs\NoteActivity The type of activity to record. */
     public mixed $activity;
@@ -47,19 +50,25 @@ class CreateActivityInput implements \Aazsamir\Libphpsky\ATProtoObject
 
     public static function required(): array
     {
-        return ['reportId', 'activity'];
+        return ['activity'];
     }
 
     public static function new(
-        int $reportId,
         \Aazsamir\Libphpsky\Model\Tools\Ozone\Report\Defs\QueueActivity|\Aazsamir\Libphpsky\Model\Tools\Ozone\Report\Defs\AssignmentActivity|\Aazsamir\Libphpsky\Model\Tools\Ozone\Report\Defs\EscalationActivity|\Aazsamir\Libphpsky\Model\Tools\Ozone\Report\Defs\CloseActivity|\Aazsamir\Libphpsky\Model\Tools\Ozone\Report\Defs\ReopenActivity|\Aazsamir\Libphpsky\Model\Tools\Ozone\Report\Defs\NoteActivity $activity,
+        ?int $reportId = null,
+        ?int $eventId = null,
         ?string $internalNote = null,
         ?string $publicNote = null,
         ?bool $isAutomated = null,
     ): self {
         $instance = new self();
-        $instance->reportId = $reportId;
         $instance->activity = $activity;
+        if ($reportId !== null) {
+            $instance->reportId = $reportId;
+        }
+        if ($eventId !== null) {
+            $instance->eventId = $eventId;
+        }
         if ($internalNote !== null) {
             $instance->internalNote = $internalNote;
         }

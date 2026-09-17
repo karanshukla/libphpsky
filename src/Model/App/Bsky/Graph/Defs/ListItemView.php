@@ -18,6 +18,9 @@ class ListItemView implements \Aazsamir\Libphpsky\ATProtoObject
     public string $uri;
     public ?\Aazsamir\Libphpsky\Model\App\Bsky\Actor\Defs\ProfileView $subject;
 
+    /** @var ?bool Set to true when the subject has opted out of appearing in the reference list. Only set when the viewer owns the list. */
+    public ?bool $subjectOptedOut;
+
     public static function id(): string
     {
         return self::ID;
@@ -41,11 +44,15 @@ class ListItemView implements \Aazsamir\Libphpsky\ATProtoObject
     public static function new(
         string $uri,
         ?\Aazsamir\Libphpsky\Model\App\Bsky\Actor\Defs\ProfileView $subject = null,
+        ?bool $subjectOptedOut = null,
     ): self {
         $instance = new self();
         $instance->uri = $uri;
         if ($subject !== null) {
             $instance->subject = $subject;
+        }
+        if ($subjectOptedOut !== null) {
+            $instance->subjectOptedOut = $subjectOptedOut;
         }
 
         return $instance;

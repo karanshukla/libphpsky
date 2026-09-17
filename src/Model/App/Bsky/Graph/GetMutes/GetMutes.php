@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aazsamir\Libphpsky\Model\App\Bsky\Graph\GetMutes;
 
 /**
- * Enumerates accounts that the requesting account (actor) currently has muted. Requires auth.
+ * Enumerates accounts that the requesting account (actor) currently has fully muted. Mutes scoped to specific kinds of content (only reposts, only quote posts) are not included. Responses may contain more items than the requested limit. Requires auth.
  * query
  */
 class GetMutes implements \Aazsamir\Libphpsky\Action

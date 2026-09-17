@@ -1154,6 +1154,22 @@ class ATProtoMetaClient
     }
 
     /**
+     * Get the authoritative status of the upload phase. Terminal states remain readable. completedJobId and jobStatus are present only for completed sessions; failureReason is present only for failed sessions.
+     */
+    public function appBskyVideoGetUploadStatus(
+    ): \Aazsamir\Libphpsky\Model\App\Bsky\Video\GetUploadStatus\GetUploadStatus {
+        return new \Aazsamir\Libphpsky\Model\App\Bsky\Video\GetUploadStatus\GetUploadStatus($this->client, $this->typeResolver, $this->token);
+    }
+
+    /**
+     * Upload one part. Parts are idempotent and may be retried or re-sent while the session is created. Each expected length is derived from the upload size and part size, and Content-Length must match exactly. ETags are never exposed to clients.
+     */
+    public function appBskyVideoUploadPart(): \Aazsamir\Libphpsky\Model\App\Bsky\Video\UploadPart\UploadPart
+    {
+        return new \Aazsamir\Libphpsky\Model\App\Bsky\Video\UploadPart\UploadPart($this->client, $this->typeResolver, $this->token);
+    }
+
+    /**
      * Get status details for a video processing job.
      */
     public function appBskyVideoGetJobStatus(): \Aazsamir\Libphpsky\Model\App\Bsky\Video\GetJobStatus\GetJobStatus
@@ -1170,11 +1186,35 @@ class ATProtoMetaClient
     }
 
     /**
+     * Finish an upload. This call is idempotent and safe to retry. On deduplication completedJobId may differ from the input jobId; poll getJobStatus with completedJobId. Probe-based validation failures surface later as JOB_STATE_FAILED from getJobStatus, not as errors from this call.
+     */
+    public function appBskyVideoFinishUpload(): \Aazsamir\Libphpsky\Model\App\Bsky\Video\FinishUpload\FinishUpload
+    {
+        return new \Aazsamir\Libphpsky\Model\App\Bsky\Video\FinishUpload\FinishUpload($this->client, $this->typeResolver, $this->token);
+    }
+
+    /**
      * Upload a video to be processed then stored on the PDS.
      */
     public function appBskyVideoUploadVideo(): \Aazsamir\Libphpsky\Model\App\Bsky\Video\UploadVideo\UploadVideo
     {
         return new \Aazsamir\Libphpsky\Model\App\Bsky\Video\UploadVideo\UploadVideo($this->client, $this->typeResolver, $this->token);
+    }
+
+    /**
+     * Start a multipart video upload. The declared size is exact, while optional media properties are advisory and used only for early failure; the authoritative probe runs asynchronously after upload.
+     */
+    public function appBskyVideoStartUpload(): \Aazsamir\Libphpsky\Model\App\Bsky\Video\StartUpload\StartUpload
+    {
+        return new \Aazsamir\Libphpsky\Model\App\Bsky\Video\StartUpload\StartUpload($this->client, $this->typeResolver, $this->token);
+    }
+
+    /**
+     * Abort an upload only while it is created, releasing its quota reservation immediately. Terminal sessions are unchanged and return their terminal outcome. A finishing session returns UploadNotReady.
+     */
+    public function appBskyVideoAbortUpload(): \Aazsamir\Libphpsky\Model\App\Bsky\Video\AbortUpload\AbortUpload
+    {
+        return new \Aazsamir\Libphpsky\Model\App\Bsky\Video\AbortUpload\AbortUpload($this->client, $this->typeResolver, $this->token);
     }
 
     /**
@@ -1714,7 +1754,7 @@ class ATProtoMetaClient
     }
 
     /**
-     * Creates a mute relationship for the specified account. Mutes are private in Bluesky. Requires auth.
+     * Creates a mute relationship for the specified account. If a mute already exists for the account, it is updated in place: the stored scope is replaced with the scope in this request. Mutes are private in Bluesky. Requires auth.
      */
     public function appBskyGraphMuteActor(): \Aazsamir\Libphpsky\Model\App\Bsky\Graph\MuteActor\MuteActor
     {
@@ -1722,7 +1762,7 @@ class ATProtoMetaClient
     }
 
     /**
-     * Enumerates accounts that the requesting account (actor) currently has muted. Requires auth.
+     * Enumerates accounts that the requesting account (actor) currently has fully muted. Mutes scoped to specific kinds of content (only reposts, only quote posts) are not included. Responses may contain more items than the requested limit. Requires auth.
      */
     public function appBskyGraphGetMutes(): \Aazsamir\Libphpsky\Model\App\Bsky\Graph\GetMutes\GetMutes
     {
@@ -1735,6 +1775,14 @@ class ATProtoMetaClient
     public function appBskyGraphUnmuteActor(): \Aazsamir\Libphpsky\Model\App\Bsky\Graph\UnmuteActor\UnmuteActor
     {
         return new \Aazsamir\Libphpsky\Model\App\Bsky\Graph\UnmuteActor\UnmuteActor($this->client, $this->typeResolver, $this->token);
+    }
+
+    /**
+     * Find starter packs matching search criteria. Does not require auth.
+     */
+    public function appBskyGraphSearchStarterPacksV2(
+    ): \Aazsamir\Libphpsky\Model\App\Bsky\Graph\SearchStarterPacksV2\SearchStarterPacksV2 {
+        return new \Aazsamir\Libphpsky\Model\App\Bsky\Graph\SearchStarterPacksV2\SearchStarterPacksV2($this->client, $this->typeResolver, $this->token);
     }
 
     /**
@@ -2170,6 +2218,14 @@ class ATProtoMetaClient
     }
 
     /**
+     * Get private preferences for an account. Requires moderator or admin auth.
+     */
+    public function toolsOzoneModerationGetAccountPreferences(
+    ): \Aazsamir\Libphpsky\Model\Tools\Ozone\Moderation\GetAccountPreferences\GetAccountPreferences {
+        return new \Aazsamir\Libphpsky\Model\Tools\Ozone\Moderation\GetAccountPreferences\GetAccountPreferences($this->client, $this->typeResolver, $this->token);
+    }
+
+    /**
      * Schedule a moderation action to be executed at a future time
      */
     public function toolsOzoneModerationScheduleAction(
@@ -2258,7 +2314,7 @@ class ATProtoMetaClient
     }
 
     /**
-     * Update queue properties. Currently only supports updating the name and enabled status to prevent configuration conflicts.
+     * Update queue properties.
      */
     public function toolsOzoneQueueUpdateQueue(): \Aazsamir\Libphpsky\Model\Tools\Ozone\Queue\UpdateQueue\UpdateQueue
     {
@@ -2290,7 +2346,7 @@ class ATProtoMetaClient
     }
 
     /**
-     * Create a new moderation queue. Will fail if the queue configuration conflicts with an existing queue.
+     * Create a new moderation queue. A queue can have optional matching criteria that ozone's queue router will use to match reports. A queue with no criteria must have reports assigned to it manually via (1) `modTool.meta.queueId` in `tools.ozone.moderation.emitEvent` or (2) `tools.ozone.report.reassignQueue`.
      */
     public function toolsOzoneQueueCreateQueue(): \Aazsamir\Libphpsky\Model\Tools\Ozone\Queue\CreateQueue\CreateQueue
     {
@@ -2455,6 +2511,14 @@ class ATProtoMetaClient
     public function toolsOzoneHostingGetAccountHistory(
     ): \Aazsamir\Libphpsky\Model\Tools\Ozone\Hosting\GetAccountHistory\GetAccountHistory {
         return new \Aazsamir\Libphpsky\Model\Tools\Ozone\Hosting\GetAccountHistory\GetAccountHistory($this->client, $this->typeResolver, $this->token);
+    }
+
+    /**
+     * Close all reports on a subject matching the given criteria. Reports whose current status does not permit a transition to closed are skipped silently. Intended for automated flows that resolve reports without taking action on the subject.
+     */
+    public function toolsOzoneReportCloseReports(
+    ): \Aazsamir\Libphpsky\Model\Tools\Ozone\Report\CloseReports\CloseReports {
+        return new \Aazsamir\Libphpsky\Model\Tools\Ozone\Report\CloseReports\CloseReports($this->client, $this->typeResolver, $this->token);
     }
 
     /**

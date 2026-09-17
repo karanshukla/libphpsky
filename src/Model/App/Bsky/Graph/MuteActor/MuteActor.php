@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aazsamir\Libphpsky\Model\App\Bsky\Graph\MuteActor;
 
 /**
- * Creates a mute relationship for the specified account. Mutes are private in Bluesky. Requires auth.
+ * Creates a mute relationship for the specified account. If a mute already exists for the account, it is updated in place: the stored scope is replaced with the scope in this request. Mutes are private in Bluesky. Requires auth.
  * procedure
  */
 class MuteActor implements \Aazsamir\Libphpsky\Action

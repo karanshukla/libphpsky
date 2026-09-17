@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aazsamir\Libphpsky\Model\Tools\Ozone\Queue\UpdateQueue;
 
 /**
- * Update queue properties. Currently only supports updating the name and enabled status to prevent configuration conflicts.
+ * Update queue properties.
  * procedure
  */
 class UpdateQueue implements \Aazsamir\Libphpsky\Action

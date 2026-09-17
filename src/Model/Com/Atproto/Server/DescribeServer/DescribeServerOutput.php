@@ -21,6 +21,9 @@ class DescribeServerOutput implements \Aazsamir\Libphpsky\ATProtoObject
     /** @var ?bool If true, a phone verification token must be supplied to create an account on this instance. */
     public ?bool $phoneVerificationRequired;
 
+    /** @var ?int Maximum size of a blob that can be uploaded via com.atproto.repo.uploadBlob, in bytes. */
+    public ?int $blobUploadLimit;
+
     /** @var array<string> List of domain suffixes that can be used in account handles. */
     public array $availableUserDomains = [];
 
@@ -59,6 +62,7 @@ class DescribeServerOutput implements \Aazsamir\Libphpsky\ATProtoObject
         string $did,
         ?bool $inviteCodeRequired = null,
         ?bool $phoneVerificationRequired = null,
+        ?int $blobUploadLimit = null,
         ?Links $links = null,
         ?Contact $contact = null,
     ): self {
@@ -70,6 +74,9 @@ class DescribeServerOutput implements \Aazsamir\Libphpsky\ATProtoObject
         }
         if ($phoneVerificationRequired !== null) {
             $instance->phoneVerificationRequired = $phoneVerificationRequired;
+        }
+        if ($blobUploadLimit !== null) {
+            $instance->blobUploadLimit = $blobUploadLimit;
         }
         if ($links !== null) {
             $instance->links = $links;

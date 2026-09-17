@@ -16,7 +16,14 @@ class ViewerState implements \Aazsamir\Libphpsky\ATProtoObject
     public const NAME = 'viewerState';
     public const ID = 'app.bsky.actor.defs';
 
+    /** @var ?bool Whether the account is fully muted, directly or via a mutelist. False when the mute is scoped to specific kinds; see mutedOnlyReposts and mutedOnlyQuoteposts. */
     public ?bool $muted;
+
+    /** @var ?bool Whether the account's reposts are muted. Scoped mutes are exclusive with muted: this can be true while muted is false. If muted is true, this will be false. */
+    public ?bool $mutedOnlyReposts;
+
+    /** @var ?bool Whether the account's quote posts are muted. Scoped mutes are exclusive with muted: this can be true while muted is false. If muted is true, this will be false. */
+    public ?bool $mutedOnlyQuoteposts;
     public ?\Aazsamir\Libphpsky\Model\App\Bsky\Graph\Defs\ListViewBasic $mutedByList;
     public ?bool $blockedBy;
     public ?string $blocking;
@@ -52,6 +59,8 @@ class ViewerState implements \Aazsamir\Libphpsky\ATProtoObject
 
     public static function new(
         ?bool $muted = null,
+        ?bool $mutedOnlyReposts = null,
+        ?bool $mutedOnlyQuoteposts = null,
         ?\Aazsamir\Libphpsky\Model\App\Bsky\Graph\Defs\ListViewBasic $mutedByList = null,
         ?bool $blockedBy = null,
         ?string $blocking = null,
@@ -64,6 +73,12 @@ class ViewerState implements \Aazsamir\Libphpsky\ATProtoObject
         $instance = new self();
         if ($muted !== null) {
             $instance->muted = $muted;
+        }
+        if ($mutedOnlyReposts !== null) {
+            $instance->mutedOnlyReposts = $mutedOnlyReposts;
+        }
+        if ($mutedOnlyQuoteposts !== null) {
+            $instance->mutedOnlyQuoteposts = $mutedOnlyQuoteposts;
         }
         if ($mutedByList !== null) {
             $instance->mutedByList = $mutedByList;

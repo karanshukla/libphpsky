@@ -18,6 +18,9 @@ class BskyAppStatePref implements \Aazsamir\Libphpsky\ATProtoObject
 
     public ?BskyAppProgressGuide $activeProgressGuide;
 
+    /** @var ?bool Indicates if the user is participating in the beta features program. */
+    public ?bool $isBetaUser;
+
     /** @var ?array<string> An array of tokens which identify nudges (modals, popups, tours, highlight dots) that should be shown to the user. */
     public ?array $queuedNudges = [];
 
@@ -50,12 +53,16 @@ class BskyAppStatePref implements \Aazsamir\Libphpsky\ATProtoObject
      */
     public static function new(
         ?BskyAppProgressGuide $activeProgressGuide = null,
+        ?bool $isBetaUser = null,
         ?array $queuedNudges = [],
         ?array $nuxs = [],
     ): self {
         $instance = new self();
         if ($activeProgressGuide !== null) {
             $instance->activeProgressGuide = $activeProgressGuide;
+        }
+        if ($isBetaUser !== null) {
+            $instance->isBetaUser = $isBetaUser;
         }
         if ($queuedNudges !== null) {
             $instance->queuedNudges = $queuedNudges;

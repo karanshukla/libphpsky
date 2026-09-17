@@ -23,8 +23,14 @@ class ThreadItemPost implements \Aazsamir\Libphpsky\ATProtoObject
     /** @var int This post has more replies that were not present in the response. This is a numeric value, which is best-effort and might not be accurate. */
     public int $moreReplies;
 
-    /** @var bool This post is part of a contiguous thread by the OP from the thread root. Many different OP threads can happen in the same thread. */
+    /** @var bool This post is part of a contiguous thread by the OP from the thread root. Sub-threads by OP deeper in the tree are not considered an OP thread. */
     public bool $opThread;
+
+    /** @var ?int The 1-indexed position of this post within the contiguous OP thread. Only present when this post is part of the OP thread (see `opThread`). */
+    public ?int $opThreadPostIndex;
+
+    /** @var ?int The total number of posts in the contiguous OP thread that this post belongs to. Only present when this post is part of the OP thread (see `opThread`). */
+    public ?int $opThreadPostCount;
 
     /** @var bool The threadgate created by the author indicates this post as a reply to be hidden for everyone consuming the thread. */
     public bool $hiddenByThreadgate;
@@ -59,6 +65,8 @@ class ThreadItemPost implements \Aazsamir\Libphpsky\ATProtoObject
         bool $hiddenByThreadgate,
         bool $mutedByViewer,
         ?\Aazsamir\Libphpsky\Model\App\Bsky\Feed\Defs\PostView $post = null,
+        ?int $opThreadPostIndex = null,
+        ?int $opThreadPostCount = null,
     ): self {
         $instance = new self();
         $instance->moreParents = $moreParents;
@@ -68,6 +76,12 @@ class ThreadItemPost implements \Aazsamir\Libphpsky\ATProtoObject
         $instance->mutedByViewer = $mutedByViewer;
         if ($post !== null) {
             $instance->post = $post;
+        }
+        if ($opThreadPostIndex !== null) {
+            $instance->opThreadPostIndex = $opThreadPostIndex;
+        }
+        if ($opThreadPostCount !== null) {
+            $instance->opThreadPostCount = $opThreadPostCount;
         }
 
         return $instance;

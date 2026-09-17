@@ -25,15 +25,19 @@ class GetFollows implements \Aazsamir\Libphpsky\Action
         return self::NAME;
     }
 
-    public function query(string $actor, ?int $limit = null, ?string $cursor = null): GetFollowsOutput
-    {
+    public function query(
+        string $actor,
+        ?int $limit = null,
+        ?string $cursor = null,
+        ?string $sort = null,
+    ): GetFollowsOutput {
         return \Aazsamir\Libphpsky\Model\App\Bsky\Graph\GetFollows\GetFollowsOutput::fromArray($this->request($this->argsWithKeys(func_get_args())), $this->typeResolver);
     }
 
     /**
      * @return array<string, mixed>
      */
-    public function rawQuery(string $actor, ?int $limit = null, ?string $cursor = null): array
+    public function rawQuery(string $actor, ?int $limit = null, ?string $cursor = null, ?string $sort = null): array
     {
         // @phpstan-ignore-next-line
         return $this->request($this->argsWithKeys(func_get_args()));

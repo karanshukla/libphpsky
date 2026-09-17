@@ -17,6 +17,7 @@ class TrendView implements \Aazsamir\Libphpsky\ATProtoObject
 
     public string $topic;
     public string $displayName;
+    public ?string $description;
     public string $link;
     public \DateTimeInterface $startedAt;
     public int $postCount;
@@ -56,6 +57,7 @@ class TrendView implements \Aazsamir\Libphpsky\ATProtoObject
         \DateTimeInterface $startedAt,
         int $postCount,
         array $actors,
+        ?string $description = null,
         ?string $status = null,
         ?string $category = null,
     ): self {
@@ -66,6 +68,9 @@ class TrendView implements \Aazsamir\Libphpsky\ATProtoObject
         $instance->startedAt = $startedAt;
         $instance->postCount = $postCount;
         $instance->actors = $actors;
+        if ($description !== null) {
+            $instance->description = $description;
+        }
         if ($status !== null) {
             $instance->status = $status;
         }

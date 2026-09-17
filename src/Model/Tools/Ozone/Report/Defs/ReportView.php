@@ -72,6 +72,9 @@ class ReportView implements \Aazsamir\Libphpsky\ATProtoObject
     /** @var ?bool Whether this report is muted. A report is muted if the reporter was muted or the subject was muted at the time the report was created. */
     public ?bool $isMuted;
 
+    /** @var ?bool Whether this report was emitted by automated tooling. */
+    public ?bool $isAutomated;
+
     public static function id(): string
     {
         return self::ID;
@@ -116,6 +119,7 @@ class ReportView implements \Aazsamir\Libphpsky\ATProtoObject
         ?ReportAssignment $assignment = null,
         ?\Aazsamir\Libphpsky\Model\Tools\Ozone\Queue\Defs\QueueView $queue = null,
         ?bool $isMuted = null,
+        ?bool $isAutomated = null,
     ): self {
         $instance = new self();
         $instance->id = $id;
@@ -164,6 +168,9 @@ class ReportView implements \Aazsamir\Libphpsky\ATProtoObject
         }
         if ($isMuted !== null) {
             $instance->isMuted = $isMuted;
+        }
+        if ($isAutomated !== null) {
+            $instance->isAutomated = $isAutomated;
         }
 
         return $instance;

@@ -15,6 +15,9 @@ class InterestsPref implements \Aazsamir\Libphpsky\ATProtoObject
     public const NAME = 'interestsPref';
     public const ID = 'app.bsky.actor.defs';
 
+    /** @var ?\DateTimeInterface The timestamp when the account owner last updated their interests. */
+    public ?\DateTimeInterface $updatedAt;
+
     /** @var array<string> A list of tags which describe the account owner's interests gathered during onboarding. */
     public array $tags = [];
 
@@ -41,10 +44,13 @@ class InterestsPref implements \Aazsamir\Libphpsky\ATProtoObject
     /**
      * @param array<string> $tags
      */
-    public static function new(array $tags): self
+    public static function new(array $tags, ?\DateTimeInterface $updatedAt = null): self
     {
         $instance = new self();
         $instance->tags = $tags;
+        if ($updatedAt !== null) {
+            $instance->updatedAt = $updatedAt;
+        }
 
         return $instance;
     }

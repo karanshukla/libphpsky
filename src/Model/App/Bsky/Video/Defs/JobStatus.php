@@ -25,6 +25,9 @@ class JobStatus implements \Aazsamir\Libphpsky\ATProtoObject
     public ?int $progress;
     public ?string $blob;
     public ?string $error;
+
+    /** @var ?string A machine-readable code for why the video processing job failed. */
+    public ?string $failureCode;
     public ?string $message;
 
     public static function id(): string
@@ -54,6 +57,7 @@ class JobStatus implements \Aazsamir\Libphpsky\ATProtoObject
         ?int $progress = null,
         ?string $blob = null,
         ?string $error = null,
+        ?string $failureCode = null,
         ?string $message = null,
     ): self {
         $instance = new self();
@@ -68,6 +72,9 @@ class JobStatus implements \Aazsamir\Libphpsky\ATProtoObject
         }
         if ($error !== null) {
             $instance->error = $error;
+        }
+        if ($failureCode !== null) {
+            $instance->failureCode = $failureCode;
         }
         if ($message !== null) {
             $instance->message = $message;

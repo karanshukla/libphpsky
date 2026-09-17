@@ -18,6 +18,9 @@ class GetTrendsSkeletonOutput implements \Aazsamir\Libphpsky\ATProtoObject
     /** @var array<\Aazsamir\Libphpsky\Model\App\Bsky\Unspecced\Defs\SkeletonTrend> */
     public array $trends = [];
 
+    /** @var ?string Snowflake for this recommendation, use when submitting recommendation events. */
+    public ?string $recIdStr;
+
     public static function id(): string
     {
         return self::ID;
@@ -41,10 +44,13 @@ class GetTrendsSkeletonOutput implements \Aazsamir\Libphpsky\ATProtoObject
     /**
      * @param array<\Aazsamir\Libphpsky\Model\App\Bsky\Unspecced\Defs\SkeletonTrend> $trends
      */
-    public static function new(array $trends): self
+    public static function new(array $trends, ?string $recIdStr = null): self
     {
         $instance = new self();
         $instance->trends = $trends;
+        if ($recIdStr !== null) {
+            $instance->recIdStr = $recIdStr;
+        }
 
         return $instance;
     }
