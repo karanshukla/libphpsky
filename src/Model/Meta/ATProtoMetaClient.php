@@ -627,6 +627,7 @@ class ATProtoMetaClient
 
     /**
      * Notify a crawling service of a recent update, and that crawling should resume. Intended use is after a gap between repo stream events caused the crawling service to disconnect. Does not require auth; implemented by Relay. DEPRECATED: just use com.atproto.sync.requestCrawl
+     * @deprecated just use com.atproto.sync.requestcrawl
      */
     public function comAtprotoSyncNotifyOfUpdate(
     ): \Aazsamir\Libphpsky\Model\Com\Atproto\Sync\NotifyOfUpdate\NotifyOfUpdate {
@@ -699,6 +700,7 @@ class ATProtoMetaClient
 
     /**
      * DEPRECATED - please use com.atproto.sync.getRepo instead
+     * @deprecated please use com.atproto.sync.getrepo instead
      */
     public function comAtprotoSyncGetCheckout(): \Aazsamir\Libphpsky\Model\Com\Atproto\Sync\GetCheckout\GetCheckout
     {
@@ -707,6 +709,7 @@ class ATProtoMetaClient
 
     /**
      * DEPRECATED - please use com.atproto.sync.getLatestCommit instead
+     * @deprecated please use com.atproto.sync.getlatestcommit instead
      */
     public function comAtprotoSyncGetHead(): \Aazsamir\Libphpsky\Model\Com\Atproto\Sync\GetHead\GetHead
     {
@@ -819,6 +822,7 @@ class ATProtoMetaClient
 
     /**
      * DEPRECATED: use queryLabels or subscribeLabels instead -- Fetch all labels from a labeler created after a certain date.
+     * @deprecated use querylabels or subscribelabels instead
      */
     public function comAtprotoTempFetchLabels(): \Aazsamir\Libphpsky\Model\Com\Atproto\Temp\FetchLabels\FetchLabels
     {

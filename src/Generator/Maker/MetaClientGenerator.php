@@ -22,6 +22,8 @@ use Nette\PhpGenerator\Property;
  */
 readonly class MetaClientGenerator
 {
+    use ParseDeprecation;
+
     public function __construct(
         private SaveClass $saveClass,
         private ClassResolver $classResolver,
@@ -75,6 +77,11 @@ readonly class MetaClientGenerator
                     $body = \sprintf('return new %s($this->wssClientFactory, $this->typeResolver, $this->token);', $this->classResolver->namespaceAndClassname($def));
                 } else {
                     $body = \sprintf('return new %s($this->client, $this->typeResolver, $this->token);', $this->classResolver->namespaceAndClassname($def));
+                }
+
+                if ($this->isDeprecated($def->description())) {
+                    $deprecatedComment = $this->extractDeprecatedComment($def->description());
+                    $method->addComment('@deprecated ' . ($deprecatedComment ?? ''));
                 }
 
                 $method->setBody($body);
