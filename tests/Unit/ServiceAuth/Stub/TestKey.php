@@ -1,0 +1,116 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Unit\ServiceAuth\Stub;
+
+use Aazsamir\Libphpsky\ServiceAuth\DidKey;
+use Aazsamir\Libphpsky\ServiceAuth\VerificationKey;
+use Brick\Math\BigInteger;
+use Firebase\JWT\JWT;
+
+/**
+ * A throwaway signing key, published the way a DID document publishes one.
+ *
+ * Tests that verify tokens need a key they control both halves of: the
+ * private half to sign with, and the multibase form a DID document would
+ * carry. Generating it keeps the suite free of fixtures and of the network.
+ *
+ * @internal
+ */
+final readonly class TestKey
+{
+    private const string ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+
+    private function __construct(
+        private \OpenSSLAsymmetricKey $privateKey,
+        public string $multibase,
+        public string $algorithm,
+    ) {}
+
+    public static function secp256k1(): self
+    {
+        return self::generate('secp256k1', "\xe7\x01", 'ES256K');
+    }
+
+    public static function p256(): self
+    {
+        return self::generate('prime256v1', "\x80\x24", 'ES256');
+    }
+
+    /**
+     * @param array<string, mixed> $claims
+     */
+    public function sign(array $claims): string
+    {
+        return JWT::encode($claims, $this->privateKey, $this->algorithm);
+    }
+
+    /**
+     * The DID document a directory would serve for this key.
+     *
+     * @return array<string, mixed>
+     */
+    public function didDocument(string $did): array
+    {
+        return [
+            'id' => $did,
+            'verificationMethod' => [
+                [
+                    'id' => $did . '#atproto',
+                    'type' => 'Multikey',
+                    'controller' => $did,
+                    'publicKeyMultibase' => $this->multibase,
+                ],
+            ],
+        ];
+    }
+
+    /** Exposed so a test can assert the decoded key matches what OpenSSL made. */
+    public function verificationKey(): VerificationKey
+    {
+        return DidKey::fromMultibase($this->multibase);
+    }
+
+    private static function generate(string $curve, string $multicodec, string $algorithm): self
+    {
+        $key = openssl_pkey_new([
+            'private_key_type' => \OPENSSL_KEYTYPE_EC,
+            'curve_name' => $curve,
+        ]);
+
+        if ($key === false) {
+            throw new \RuntimeException("Could not generate a {$curve} key");
+        }
+
+        $details = openssl_pkey_get_details($key);
+
+        if ($details === false) {
+            throw new \RuntimeException('Could not read the generated key');
+        }
+
+        /** @var array{x: string, y: string} $point */
+        $point = $details['ec'];
+        $x = str_pad($point['x'], 32, "\x00", \STR_PAD_LEFT);
+        $y = str_pad($point['y'], 32, "\x00", \STR_PAD_LEFT);
+        $parity = (\ord($y[31]) & 1) === 1 ? "\x03" : "\x02";
+
+        return new self($key, 'z' . self::base58($multicodec . $parity . $x), $algorithm);
+    }
+
+    /**
+     * Deliberately encodes rather than calling Base58, so the round trip in
+     * DidKeyTest runs through two independently written implementations.
+     */
+    private static function base58(string $bytes): string
+    {
+        $number = BigInteger::fromBytes($bytes, false);
+        $encoded = $number->isZero() ? '' : $number->toArbitraryBase(self::ALPHABET);
+
+        for ($i = 0; $i < \strlen($bytes) && $bytes[$i] === "\x00"; $i++) {
+            $encoded = '1' . $encoded;
+        }
+
+        return $encoded;
+    }
+}

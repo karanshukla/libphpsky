@@ -81,6 +81,7 @@ For more examples, check `examples` directory.
 -   Comprehensive interaction with the ATProtocol
 -   Statically typed queries, procedures and objects
 -   Authorization and automatic session management (with experimental OAuth support!)
+-   Service auth JWT verification (DID document resolution, secp256k1 and P-256)
 -   Query caching
 -   Amphp client support
 -   Subscriptions over WebSockets

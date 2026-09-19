@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Unit\ServiceAuth\Stub;
+
+use Aazsamir\Libphpsky\ServiceAuth\DidDocumentResolver;
+use Aazsamir\Libphpsky\ServiceAuth\ServiceAuthException;
+
+/**
+ * Serves a scripted sequence of DID documents, and counts resolutions, so a
+ * test can assert on refetch behaviour without touching the network.
+ *
+ * @internal
+ */
+final class FakeDidDocumentResolver implements DidDocumentResolver
+{
+    public int $resolutions = 0;
+
+    public int $refreshes = 0;
+
+    /** @var list<string> every DID asked for, in order */
+    public array $dids = [];
+
+    /** @param list<array<string, mixed>> $documents served in order, the last one repeating */
+    public function __construct(
+        private readonly array $documents,
+    ) {}
+
+    public function resolve(string $did, bool $forceRefresh = false): array
+    {
+        $this->dids[] = $did;
+
+        if ($this->documents === []) {
+            throw new ServiceAuthException("No document for {$did}");
+        }
+
+        if ($forceRefresh) {
+            $this->refreshes++;
+        }
+
+        $index = min($this->resolutions, \count($this->documents) - 1);
+        $this->resolutions++;
+
+        return $this->documents[$index];
+    }
+}
