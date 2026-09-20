@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\ServiceAuth\Stub;
 
-use Aazsamir\Libphpsky\ServiceAuth\DidKey;
-use Aazsamir\Libphpsky\ServiceAuth\VerificationKey;
 use Brick\Math\BigInteger;
 use Firebase\JWT\JWT;
+use KaranShukla\PhpAtprotoIdentity\DidKey;
+use KaranShukla\PhpAtprotoIdentity\VerificationKey;
 
 /**
  * A throwaway signing key, published the way a DID document publishes one.

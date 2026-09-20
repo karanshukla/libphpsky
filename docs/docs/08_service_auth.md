@@ -2,6 +2,8 @@
 
 ATProto services authenticate inter-service requests with a short-lived JWT signed by the *user's* signing key, published in their DID document under the `#atproto` verification method. An AppView calling your feed generator sends one; verifying it means resolving the issuer's DID and checking the signature against the keys that document lists.
 
+The DID resolution and key decoding underneath this live in [`karanshukla/php-atproto-identity`](https://github.com/karanshukla/php-atproto-identity), which libphpsky depends on. `ServiceAuthVerifier` is the ATProto-specific half: the claim checks and the rotation handling. Import `HttpDidDocumentResolver`, `Psr6DidDocumentCache` and `DidDocumentCache` from `KaranShukla\PhpAtprotoIdentity`.
+
 ```php
 $verifier = new ServiceAuthVerifier(
     new HttpDidDocumentResolver(
@@ -20,7 +22,7 @@ $token = $verifier->verify(
 $token->issuer; // the DID that made the request
 ```
 
-`verify()` throws `ServiceAuthException` for anything it cannot accept. Callers that treat auth as optional catch it and fall back to an anonymous request; callers that require it turn it into a 401.
+`verify()` throws `ServiceAuthException` for anything it cannot accept, including failures that originate in the identity layer — a DID that will not resolve is wrapped rather than surfaced as its own exception type, so there is only one thing to catch. Callers that treat auth as optional catch it and fall back to an anonymous request; callers that require it turn it into a 401.
 
 `ServiceAuthVerifier::unverifiedIssuer($jwt)` reads the issuer out of a token without verifying anything. It is for logs only, but it is what makes an account-specific auth failure visible rather than looking like a stale feed.
 
@@ -51,3 +53,5 @@ $cache = new Psr6DidDocumentCache(
 `did:plc` resolves through a PLC directory (`https://plc.directory` by default, override with the `plcDirectory` argument) and `did:web` through the domain's `/.well-known/did.json`. A `did:web` with a path is rejected.
 
 Signing keys on both curves ATProto uses are supported: `secp256k1` (`ES256K`) and NIST P-256 (`ES256`).
+
+Both of the above are the identity package's remit, so that is where to add a DID method or a curve.

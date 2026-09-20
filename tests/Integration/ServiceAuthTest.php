@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
-use Aazsamir\Libphpsky\ServiceAuth\HttpDidDocumentResolver;
 use Aazsamir\Libphpsky\ServiceAuth\ServiceAuthException;
 use Aazsamir\Libphpsky\ServiceAuth\ServiceAuthVerifier;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\HttpFactory;
+use KaranShukla\PhpAtprotoIdentity\HttpDidDocumentResolver;
 
 /**
  * Verifies a token the network actually minted, against the signing key the
