@@ -6,8 +6,8 @@ namespace Tests\Unit\ServiceAuth\Stub;
 
 use Brick\Math\BigInteger;
 use Firebase\JWT\JWT;
-use KaranShukla\PhpAtprotoIdentity\DidKey;
-use KaranShukla\PhpAtprotoIdentity\VerificationKey;
+use KaranShukla\PhpAtprotoIdentity\Key\DidKey;
+use KaranShukla\PhpAtprotoIdentity\Key\VerificationKey;
 
 /**
  * A throwaway signing key, published the way a DID document publishes one.
@@ -99,8 +99,8 @@ final readonly class TestKey
     }
 
     /**
-     * Deliberately encodes rather than calling Base58, so the round trip in
-     * DidKeyTest runs through two independently written implementations.
+     * Encodes rather than calling the library that decodes it, so a fixture
+     * and the code under test never share a bug.
      */
     private static function base58(string $bytes): string
     {

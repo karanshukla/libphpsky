@@ -8,7 +8,7 @@ use Aazsamir\Libphpsky\ServiceAuth\ServiceAuthException;
 use Aazsamir\Libphpsky\ServiceAuth\ServiceAuthVerifier;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\HttpFactory;
-use KaranShukla\PhpAtprotoIdentity\HttpDidDocumentResolver;
+use KaranShukla\PhpAtprotoIdentity\Resolution\HttpDidDocumentResolver;
 
 /**
  * Verifies a token the network actually minted, against the signing key the
